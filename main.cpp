@@ -1,3 +1,4 @@
+#include <clocale>
 #include <format>
 #include <iostream>
 
