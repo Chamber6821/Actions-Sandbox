@@ -1,10 +1,19 @@
-#include <clocale>
-#include <format>
 #include <iostream>
+#include <ranges>
+#include <string>
 
 int main() {
-  std::setlocale(LC_ALL, "Russian");
-  int cows = 33;
-  std::wcout << std::format(
-      L"{0} коровы, {0} коровы, {0} коровы - свежая строка\n", cows);
+  using namespace std::views;
+
+  auto generated =                                          //
+      iota(0, 4)                                            //
+      | transform([](auto x) { return std::to_string(x); }) //
+      | transform([](auto x) { return "." + x; })           //
+      | join                                                //
+      | drop(1); // drop the first extra dot
+
+  std::string version;
+  std::ranges::copy(generated, std::back_inserter(version));
+
+  std::cout << version;
 }

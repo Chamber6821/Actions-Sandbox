@@ -4,25 +4,26 @@ on:
     branches: [ master ]
 jobs:
   without-cmake:
-    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, windows-2022]
+    runs-on: ${{ matrix.os }}
     env:
       LLVM_VERSION: 16.0
       LLVM_PATH: ${{ github.workspace }}/llvm
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache/restore@v3
+      - name: Cache LLVM
+        uses: actions/cache@v3
         id: cache-llvm
         with:
           path: ${{ env.LLVM_PATH }}
           key: ${{ runner.os }}-llvm-${{ env.LLVM_VERSION }}
-      - uses: KyleMayes/install-llvm-action@v1
+      - name: Install LLVM
+        uses: KyleMayes/install-llvm-action@v1
         with:
           version: ${{ env.LLVM_VERSION }}
           cached: ${{ steps.cache-llvm.outputs.cache-hit }}
-      - uses: actions/cache/save@v3
-        if: ${{ !steps.cache-llvm.outputs.cache-hit }}
-        with:
-          path: ${{ env.LLVM_PATH }}
-          key: ${{ steps.cache-llvm.outputs.cache-primary-key }}
-      - run: clang++ main.cpp --std=c++20 --stdlib=libc++ --output=main
-      - run: ./main
+      - run: clang++ main.cpp --std=c++20 --output=main.exe
+      - run: ./main.exe
