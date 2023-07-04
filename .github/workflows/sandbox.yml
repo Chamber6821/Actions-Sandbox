@@ -25,5 +25,5 @@ jobs:
         with:
           version: ${{ env.LLVM_VERSION }}
           cached: ${{ steps.cache-llvm.outputs.cache-hit }}
-      - run: clang++ main.cpp --std=c++20 --output=main.exe -fexperimental-library
+      - run: clang++ main.cpp --std=c++20 --output=main.exe -fexperimental-library -stdlib=libc++
       - run: ./main.exe
