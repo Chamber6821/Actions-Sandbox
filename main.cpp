@@ -1,4 +1,3 @@
-#include <iostream>
 #include <ranges>
 #include <string>
 
@@ -11,9 +10,4 @@ int main() {
       | transform([](auto x) { return "." + x; })           //
       | join                                                //
       | drop(1); // drop the first extra dot
-
-  std::string version;
-  std::ranges::copy(generated, std::back_inserter(version));
-
-  std::cout << version;
 }
